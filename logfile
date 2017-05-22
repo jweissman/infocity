@@ -1,0 +1,15 @@
+LOG:  database system was interrupted; last known up at 2017-04-24 09:46:43 EDT
+LOG:  database system was not properly shut down; automatic recovery in progress
+LOG:  invalid record length at 0/44CC6F38: wanted 24, got 0
+LOG:  redo is not required
+LOG:  MultiXact member wraparound protections are now enabled
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "infocity" does not exist
+FATAL:  role "infocity" does not exist
+ERROR:  database "infocity_development" already exists
+STATEMENT:  CREATE DATABASE "infocity_development" ENCODING = 'unicode'
+ERROR:  database "infocity_test" already exists
+STATEMENT:  CREATE DATABASE "infocity_test" ENCODING = 'unicode'
