@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522144522) do
+ActiveRecord::Schema.define(version: 20170522152844) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,4 +21,14 @@ ActiveRecord::Schema.define(version: 20170522144522) do
     t.datetime "updated_at",              null: false
   end
 
+  create_table "spaces", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "cartogram_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["cartogram_id"], name: "index_spaces_on_cartogram_id", using: :btree
+  end
+
+  add_foreign_key "spaces", "cartograms"
 end
