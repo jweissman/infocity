@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :spaces
+
   get 'pages/welcome', as: :welcome
   get 'pages/about', as: :about
   get 'pages/home', as: :home

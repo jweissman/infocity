@@ -8,7 +8,7 @@ class Cartogram < ApplicationRecord
   end
 
   def at(x,y)
-    return nil unless contains?(x,y) #[y]
+    return nil unless contains?(x,y)
     structure[y][x]
   end
 

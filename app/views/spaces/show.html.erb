@@ -1,0 +1,17 @@
+<h1><%= @space.name %></h1>
+<h3>description</h3>
+<p><%= @space.description %></p>
+
+<h3>cartogram</h3>
+<p>the map is:</p>
+<% width, height = @space.dimensions %>
+
+<table style='border: 1px solid black; padding: 3px'>
+  <% (0...height).each do |y| %>
+    <tr style='padding: 5px' >
+      <% (0...width).map do |x| %>
+        <td style='border: 1px dotted gray; padding: 2px'><%= @space.cartogram.at(x,y) %></td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
