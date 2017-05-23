@@ -1,6 +1,5 @@
 class ManagementKey < ApplicationRecord
   belongs_to :space
-
   before_save :ensure_uuid_generated
 
   def ensure_uuid_generated
