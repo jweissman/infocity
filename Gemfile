@@ -44,6 +44,7 @@ group :development, :test do
 
   # curses for client
   gem 'curses'
+  gem 'thor'
 end
 
 group :development do

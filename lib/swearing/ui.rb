@@ -1,3 +1,4 @@
+require 'logger'
 require 'curses'
 
 # a little wrapper around curses
@@ -8,6 +9,12 @@ module Swearing
     def log
       @logger = Logger.new('log/swearing.log')
     end
+
+    def inscribe(figure: 'X', at:)
+      x, y = *at
+      setpos(y, x)
+      addstr(figure)
+    end
   end
 
   class Label < Component
@@ -16,8 +23,7 @@ module Swearing
     end
 
     def draw
-      setpos(@x, @y)
-      addstr(@text)
+      inscribe figure: @text, at: [@x, @y]
     end
   end
 
@@ -54,8 +60,9 @@ module Swearing
 
     def draw
       each_position do |(xi,yi)|
-        setpos( @y + yi, @x + xi )
-        addstr(figure_at(xi, yi))
+        figure = figure_at(xi, yi)
+        position = [ @x + xi, @y + yi ]
+        inscribe figure: figure, at: position
       end
     end
   end

@@ -8,9 +8,12 @@ RSpec.describe Pawn, type: :model do
   end
 
   it 'can belong to a space' do
-    space = Space.new
+    space = Space.create!(cartogram: Cartogram.new)
     pawn = described_class.new(space: space)
     expect(pawn.space).to eq(space)
+
+    pawn.save
+    expect(space.reload.pawns).to contain_exactly(pawn)
   end
 
   it 'can be moved' do

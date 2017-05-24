@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'thor'
+
+require_relative 'lib/swearing/ui'
+require_relative 'lib/infocity/client'
+require_relative 'lib/infocity/screen'
+
+class Infocity::CLI < Thor
+  desc 'hello NAME', "say hello to NAME"
+  option :from
+  def hello(name)
+    say "from: #{options[:from]}" if options[:from]
+    say "Hello #{name}", :green
+  end
+
+  desc 'screen', "connect to space"
+  option :pawn_key, required: true
+  def screen
+    say "would connect to space!"
+    screen_app = Infocity::Screen::App.new(pawn_key: options[:pawn_key])
+    screen_app.launch!
+  end
+end
+
+Infocity::CLI.start

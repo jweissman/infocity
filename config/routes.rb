@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get 'pawns/create'
+
+  get 'pawns/index'
+
+  get 'pawns/show'
+
   resources :spaces
 
   get 'pages/welcome', as: :welcome
