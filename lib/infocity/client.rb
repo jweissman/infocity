@@ -15,22 +15,17 @@ module Infocity
       @http = Net::HTTP.new(@host, @port)
     end
 
-    def retrieve_space_details
-      get_space_details = Net::HTTP::Get.new("/spaces/1.json")
-      response = @http.request(get_space_details)
-      JSON.parse(response.body)
-    end
-
     def awaken_pawn(pawn_key:)
-      post_create_pawn = Net::HTTP::Post.new("/pawns/create")
-      post_create_pawn.set_form_data({
-        "space_id" => 1,
-        "name" => "Guest1234",
-        "status" => "Just hanging",
-        "pawn_key" => pawn_key
-      })
+      post_create_pawn = Net::HTTP::Post.new("/pawns/awaken")
+      pawn_params = {
+        # "pawn[space_id]" => 1,
+        # "pawn[name]" => "Guest1234",
+        # "pawn[status]" => "Just hanging",
+        "pawn[pawn_key]" => pawn_key
+      }
+      post_create_pawn.set_form_data( pawn_params ) #.to_json
       response = @http.request(post_create_pawn)
-      JSON.parse(response.body)
+      JSON.parse(response.body, symbolize_names: true)
     end
   end
 end

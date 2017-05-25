@@ -1,13 +1,15 @@
 module Infocity
   module Screen
     class Model
-      attr_reader :name, :description, :cartogram
-      def initialize(name:, description:, cartogram:)
+      attr_reader :name, :description, :cartogram, :pawn
+      def initialize(name:, description:, cartogram:, pawn:)
         @name = name
         @description = description
         @cartogram = cartogram
+        @pawn = pawn
       end
     end
+
 
     # main app view
     class View < Swearing::Component
@@ -23,6 +25,13 @@ module Infocity
           legend: { 0 => ' ', 1 => '.', 2 => '_', 3 => '|' },
           field: model.cartogram
         )
+
+        if model.pawn
+          pawn = Swearing::Sigil.new(x: model.pawn[:x], y: model.pawn[:y], figure: '@', text: model.pawn[:name])
+          # log.info "---> RENDER PAWN #{pawn.inspect}"
+          grid.show(pawn)
+          # pawn.draw
+        end
 
         container = Swearing::Container.new(width: cols, height: lines, elements: [ grid ] )
         container.draw
@@ -44,18 +53,25 @@ module Infocity
 
       def boot!
         @client.connect!
-        space_details = @client.retrieve_space_details
-        # pawn_details  = @client.awaken_pawn(pawn_key: pawn_key)
+        # space_details = @client.retrieve_space_details
+        # @ui.log.info "space: #{space_details}"
 
-        @ui.log.info "space: #{space_details}"
+        awaken_data  = @client.awaken_pawn(pawn_key: @pawn_key)
+        @ui.log.info "awaken data: #{awaken_data}"
+        pawn_details = awaken_data
+        space_details = pawn_details[:space]
+        @ui.log.info "pawn: #{pawn_details}"
 
         @model  = Model.new(
-          name: space_details['name'],
-          description: space_details['description'],
-          cartogram: space_details['cartogram']['structure']
-          # pawn: {
-          #   location
-          # }
+          name: space_details[:name],
+          description: space_details[:description],
+          cartogram: space_details[:cartogram][:structure],
+          pawn: {
+            x: pawn_details[:x],
+            y: pawn_details[:y],
+            name: pawn_details[:name],
+            status: pawn_details[:status]
+          }
         )
       end
 

@@ -1,5 +1,6 @@
 class Pawn < ApplicationRecord
   belongs_to :space
+  has_many :pawn_keys
 
   def go(direction)
     case direction

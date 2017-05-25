@@ -22,8 +22,22 @@ module Swearing
       @x, @y, @text = x, y, text
     end
 
-    def draw
-      inscribe figure: @text, at: [@x, @y]
+    def draw(offset: [0,0])
+      ox, oy = *offset
+      inscribe figure: @text, at: [@x + ox, @y + oy]
+    end
+  end
+
+  # a labelled inscription
+  class Sigil < Swearing::Component
+    def initialize(x:, y:, figure:, text:)
+      @x, @y, @figure, @text = x, y, figure, text
+    end
+
+    def draw(offset: [0,0])
+      ox, oy = *offset
+      inscribe figure: @figure, at: [@x + ox, @y + oy]
+      inscribe figure: @text,   at: [@x + ox - @text.length/2, @y + oy + 1]
     end
   end
 
@@ -32,6 +46,11 @@ module Swearing
     def initialize(x:, y:, field:, legend:)
       @x, @y, @field = x, y, field
       @legend = legend
+      @marks = []
+    end
+
+    def show(mark)
+      @marks << mark
     end
 
     def figure_at(px,py)
@@ -63,6 +82,11 @@ module Swearing
         figure = figure_at(xi, yi)
         position = [ @x + xi, @y + yi ]
         inscribe figure: figure, at: position
+      end
+
+      @marks.each do |mark|
+        mark.draw(offset: [@x, @y])
+        # inscribe figure: mark.text, at: [ @x + mark.x, @y + mark.y]
       end
     end
   end

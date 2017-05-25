@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523205949) do
+ActiveRecord::Schema.define(version: 20170524202320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,15 @@ ActiveRecord::Schema.define(version: 20170523205949) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
     t.index ["space_id"], name: "index_management_keys_on_space_id", using: :btree
+  end
+
+  create_table "pawn_keys", force: :cascade do |t|
+    t.integer  "pawn_id"
+    t.uuid     "value"
+    t.text     "description"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["pawn_id"], name: "index_pawn_keys_on_pawn_id", using: :btree
   end
 
   create_table "pawns", force: :cascade do |t|
@@ -51,6 +60,7 @@ ActiveRecord::Schema.define(version: 20170523205949) do
   end
 
   add_foreign_key "management_keys", "spaces"
+  add_foreign_key "pawn_keys", "pawns"
   add_foreign_key "pawns", "spaces"
   add_foreign_key "spaces", "cartograms"
 end
