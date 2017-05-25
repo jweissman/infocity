@@ -1,35 +1,37 @@
 class PawnsController < ApplicationController
+  before_action :extract_pawn_key
+
   def awaken
     logger.info "AWAKEN"
-    logger.info "Was given pawn key?"
+    @pawn = @pawn_key.pawn
+    @pawn.update(status: 'awake')
+    render json: @pawn, include: {
+      :space => {:include => [ :cartogram ]}
+    }
+  end
+
+  def move
+    logger.info "MOVE PAWN #{pawn_params[:direction]}"
+    # logger.info "was given pawn key?"
+    @pawn.go(pawn_params[:direction])
+    render json: @pawn, include: {
+      :space => {:include => [ :cartogram ]}
+    }
+  end
+
+  protected
+  def extract_pawn_key
     if pawn_params[:pawn_key]
-      logger.info "---> GOT PAWN KEY: #{pawn_params[:pawn_key]}"
       pawn_key_value = pawn_params[:pawn_key]
-      @key = PawnKey.find_by(value: pawn_key_value)
-      if @key
-        @pawn = @key.pawn
-        # @space = @key.space
-        logger.info "---> FOUND PAWN KEY UNLOCKS: #{@pawn.inspect}"
-        # @pawn.update(status: 'awake!')
-
-        # @pawn = @space.pawns.first_or_create!
-        # @pawn.update space: space
-
-        render json: @pawn, include: {
-          :space => {:include => [ :cartogram ]}
-        }
-      else
-        render json: { error: 'you need to provide a valid/active management key to awaken a pawn' }
-      end
+      @pawn_key = PawnKey.find_by(value: pawn_key_value)
+      @pawn = @pawn_key.pawn
+      logger.info "---> FOUND PAWN KEY UNLOCKS: #{@pawn.inspect}"
     else
-      render json: { error: 'you need to provide a valid/active management key to awaken a pawn' }
+      render json: { error: 'you need to provide a valid/active management key' }
     end
   end
 
-  # def move; end
-
-  protected
   def pawn_params
-    params.require(:pawn).permit(:name, :status, :space_id, :pawn_key)
+    params.require(:pawn).permit(:name, :status, :space_id, :pawn_key, :direction)
   end
 end

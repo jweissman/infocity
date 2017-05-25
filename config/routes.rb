@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
-  post '/pawns/awaken'
-  # resources :pawns
   resources :spaces
+  post '/pawns/awaken'
+  post '/pawns/move'
+  # resources :pawns
 
   get 'pages/welcome', as: :welcome
   get 'pages/about', as: :about

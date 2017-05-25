@@ -53,12 +53,42 @@ module Infocity
 
       def boot!
         @client.connect!
-        # space_details = @client.retrieve_space_details
-        # @ui.log.info "space: #{space_details}"
 
         awaken_data  = @client.awaken_pawn(pawn_key: @pawn_key)
-        @ui.log.info "awaken data: #{awaken_data}"
-        pawn_details = awaken_data
+        if awaken_data[:error]
+          puts "---> ERROR: #{awaken_data[:error]}"
+          exit(-1)
+          # raise 'unable to awaken pawn'
+        else
+          @ui.log.info "awaken data: #{awaken_data}"
+          update_model(awaken_data)
+        end
+      end
+
+      def render
+        @view.draw(@model)
+      end
+
+      def press(key)
+        @ui.log.info "pressed #{key}"
+        if key == 'x' || key == 'q'
+          @ui.quit!
+        else
+          case key
+          when 'h', 'j', 'k', 'l' then move(direction_for(key))
+          else @ui.log.info "no mapping for key '#{key}'"
+          end
+        end
+      end
+
+      def move(direction)
+        @ui.log.info "WOULD MOVE #{direction}"
+        pawn_data = @client.move_pawn(pawn_key: @pawn_key, direction: direction)
+        update_model(pawn_data)
+      end
+
+      def update_model(data)
+        pawn_details = data
         space_details = pawn_details[:space]
         @ui.log.info "pawn: #{pawn_details}"
 
@@ -75,15 +105,13 @@ module Infocity
         )
       end
 
-      def render
-        @view.draw(@model)
-      end
-
-      def press(key)
-        @ui.log.info "pressed #{key}"
-        if key == 'x' || key == 'q'
-          @ui.quit!
-        end
+      def direction_for(key)
+        {
+          'k' => 'north',
+          'j' => 'south',
+          'h' => 'east',
+          'l' => 'west'
+        }[key]
       end
 
       def launch!
