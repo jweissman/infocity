@@ -1,5 +1,5 @@
 namespace :city do
-  # task :make ...
+  # TODO task :make ...
   namespace :keys do
     task :gen => :environment do
       puts "=== CREATE MANAGEMENT KEY ==="

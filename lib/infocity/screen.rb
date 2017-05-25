@@ -1,12 +1,13 @@
 module Infocity
   module Screen
     class Model
-      attr_reader :name, :description, :cartogram, :pawn
-      def initialize(name:, description:, cartogram:, pawn:)
+      attr_reader :name, :description, :cartogram, :pawn, :others
+      def initialize(name:, description:, cartogram:, pawn:, others:)
         @name = name
         @description = description
         @cartogram = cartogram
         @pawn = pawn
+        @others = others
       end
     end
 
@@ -27,10 +28,16 @@ module Infocity
         )
 
         if model.pawn
-          pawn = Swearing::Sigil.new(x: model.pawn[:x], y: model.pawn[:y], figure: '@', text: model.pawn[:name])
-          # log.info "---> RENDER PAWN #{pawn.inspect}"
-          grid.show(pawn)
-          # pawn.draw
+          pawn_sigil = Swearing::Sigil.new(x: model.pawn[:x], y: model.pawn[:y], figure: '@', text: model.pawn[:name] + " (you)")
+          grid.show(pawn_sigil)
+        end
+
+        if model.others.any?
+          log.info "---> would draw others"
+          model.others.each do |other|
+            other_sigil = Swearing::Sigil.new(x: other[:x], y: other[:y], figure: '^', text: other[:name])
+            grid.show(other_sigil)
+          end
         end
 
         container = Swearing::Container.new(width: cols, height: lines, elements: [ grid ] )
@@ -101,7 +108,8 @@ module Infocity
             y: pawn_details[:y],
             name: pawn_details[:name],
             status: pawn_details[:status]
-          }
+          },
+          others: space_details[:pawns].reject { |the_pawn| the_pawn[:id] == pawn_details[:id] }
         )
       end
 
