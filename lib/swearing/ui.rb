@@ -136,6 +136,7 @@ module Swearing
     end
 
     def quit!
+      EventMachine.stop
       @quit = true
     end
 

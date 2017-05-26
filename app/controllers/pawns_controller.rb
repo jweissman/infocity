@@ -5,6 +5,10 @@ class PawnsController < ApplicationController
     logger.info "AWAKEN PAWN"
     @pawn = @pawn_key.pawn
     @pawn.update(status: 'awake')
+
+    # ActionCable.server.broadcast 'messages',
+    #   message: "hey clients, a pawn awakened" # message.content
+      # user: message.user.username
     render json: @pawn, include: {
       :space => {:include => [ :cartogram, :pawns ]}
     }
@@ -13,6 +17,9 @@ class PawnsController < ApplicationController
   def move
     logger.info "MOVE PAWN #{pawn_params[:direction]}"
     @pawn.go(pawn_params[:direction])
+
+    # ActionCable.server.broadcast 'messages',
+    #   message: "hey clients, a pawn moved" # message.content
     render json: @pawn, include: {
       :space => {:include => [ :cartogram, :pawns ]}
     }
@@ -26,7 +33,7 @@ class PawnsController < ApplicationController
       logger.info "---> FOUND PAWN KEY!"
       if @pawn_key.pawn
         @pawn = @pawn_key.pawn
-        logger.info "---> FOUND PAWN KEY UNLOCKS: #{@pawn.inspect}"
+        logger.info "---> FOUND PAWN THAT KEY UNLOCKS: #{@pawn.inspect}"
         return true
       end
     end

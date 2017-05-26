@@ -123,9 +123,13 @@ module Infocity
       end
 
       def launch!
-        puts "=== SCREEN"
-        boot!
-        @ui.launch!
+        EventMachine.run do
+          @ui.log.info "em run"
+          # puts "=== SCREEN"
+          boot!
+          @client.connect_ws!
+          @ui.launch!
+        end
       end
     end
   end

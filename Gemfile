@@ -45,6 +45,9 @@ group :development, :test do
   # curses for client
   gem 'curses'
   gem 'thor'
+  # gem 'action_cable_client'
+  gem 'space_elevator'
+  gem 'em-websocket-client'
 end
 
 group :development do
