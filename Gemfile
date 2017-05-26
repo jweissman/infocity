@@ -46,7 +46,7 @@ group :development, :test do
   gem 'curses'
   gem 'thor'
   # gem 'action_cable_client'
-  gem 'space_elevator'
+  gem 'space_elevator', path: '../space_elevator'
   gem 'em-websocket-client'
 end
 

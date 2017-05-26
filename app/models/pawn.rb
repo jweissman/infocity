@@ -11,4 +11,9 @@ class Pawn < ApplicationRecord
     else raise "Unknown direction #{direction} (must be north/south/east/west)"
     end
   end
+
+  def self.for_key(value:)
+    pawn_key = PawnKey.find_by(value: value)
+    pawn_key.pawn if pawn_key
+  end
 end

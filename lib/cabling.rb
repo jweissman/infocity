@@ -1,10 +1,32 @@
+# require 'action_cable_client'
+
+# EventMachine.run do
+# 
+#   uri = "ws://0.0.0.0:3000/cable/"
+#   client = ActionCableClient.new(uri, 'PawnsChannel')
+#   # the connected callback is required, as it triggers
+#   # the actual subscribing to the channel but it can just be
+#   # client.connected {}
+#   client.connected { puts 'successfully connected.' }
+# 
+#   # called whenever a message is received from the server
+#   client.received(false) do |message|
+#     puts message
+#   end
+# 
+#   # adds to a queue that is purged upon receiving of
+#   # a ping from the server
+#   puts "---> perform..."
+#   client.perform('speak', { message: 'hello from joe' })
+# end
+
 require 'space_elevator'
 require 'eventmachine'
 require 'em-websocket-client'
 
 EventMachine.run do
 
-  url = 'ws://0.0.0.0:9292/cable'
+  url = 'ws://0.0.0.0:3000/cable?pawn_key=d5b4d11c-798f-47dd-acee-e0ebde9f5ff6' #0.0.0.0:9292/cable'
   puts "--- connect to #{url} ---"
 
     # Create a SpaceElevator::Client with a disconnect handler.
@@ -24,8 +46,10 @@ EventMachine.run do
                 puts "Received pawn Event: #{chat}"
                 if chat['type'] == 'confirm_subscription'
                     puts "Subscription to #{chat['identifier']['channel']} confirmed!"
+
                     # Broadcast to the channel! The actual channel identifier and message payload is specific to your backend's WebSocket API.
-                    client.publish({channel: 'ChatChannel'}, {subject: 'Hi', text: "What's up, y'all!?!?"})
+                    puts "---> publish..."
+                    client.publish({channel: 'PawnsChannel'}, { action: 'speak', subject: 'Hi', text: "What's up, y'all!?!?"})
                 end
             end
 

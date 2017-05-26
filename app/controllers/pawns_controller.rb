@@ -1,28 +1,9 @@
 class PawnsController < ApplicationController
   before_action :extract_pawn_key
 
-  def awaken
-    logger.info "AWAKEN PAWN"
+  def deref
     @pawn = @pawn_key.pawn
-    @pawn.update(status: 'awake')
-
-    # ActionCable.server.broadcast 'messages',
-    #   message: "hey clients, a pawn awakened" # message.content
-      # user: message.user.username
-    render json: @pawn, include: {
-      :space => {:include => [ :cartogram, :pawns ]}
-    }
-  end
-
-  def move
-    logger.info "MOVE PAWN #{pawn_params[:direction]}"
-    @pawn.go(pawn_params[:direction])
-
-    # ActionCable.server.broadcast 'messages',
-    #   message: "hey clients, a pawn moved" # message.content
-    render json: @pawn, include: {
-      :space => {:include => [ :cartogram, :pawns ]}
-    }
+    render json: @pawn
   end
 
   protected
@@ -42,6 +23,6 @@ class PawnsController < ApplicationController
   end
 
   def pawn_params
-    params.require(:pawn).permit(:name, :status, :space_id, :pawn_key, :direction)
+    params.require(:pawn).permit(:pawn_key)
   end
 end

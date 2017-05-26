@@ -3,8 +3,8 @@ Rails.application.routes.draw do
   mount ActionCable.server, at: '/cable'
 
   resources :spaces
-  post '/pawns/awaken'
-  post '/pawns/move'
+  get '/pawns/deref' # map pawn key => pawn id + details...
+  # post '/pawns/move'
   # resources :pawns
 
   get 'pages/welcome', as: :welcome
